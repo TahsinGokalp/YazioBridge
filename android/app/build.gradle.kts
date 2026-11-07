@@ -12,8 +12,8 @@ android {
         applicationId = "studio.kodrika.yaziobridge"
         minSdk = 28
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
     }
     buildTypes {
         release {
@@ -38,4 +38,5 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.health.connect)
+    implementation(libs.work.runtime)
 }

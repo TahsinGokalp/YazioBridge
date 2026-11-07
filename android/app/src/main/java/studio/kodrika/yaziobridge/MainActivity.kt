@@ -56,6 +56,8 @@ private fun Screen() {
     var last by remember { mutableLongStateOf(bridge?.lastSync ?: 0L) }
     val vault = remember { Vault(ctx) }
     var days by remember { mutableIntStateOf(vault.get("days")?.toIntOrNull() ?: 7) }
+    var bg by remember { mutableStateOf(SyncWorker.enabled(ctx)) }
+    var bgErr by remember { mutableStateOf(vault.get("bgErr")) }
 
     val permLauncher = rememberLauncherForActivityResult(PermissionController.createRequestPermissionResultContract()) { g ->
         granted = g.containsAll(Bridge.PERMISSIONS)
@@ -68,7 +70,7 @@ private fun Screen() {
         scope.launch {
             runCatching { withContext(Dispatchers.IO) { b.sync(yazio, days) } }
                 .onSuccess { r ->
-                    last = b.lastSync
+                    last = b.lastSync; vault.set("bgErr", null); bgErr = null
                     msg = "${r.days} gün, ${r.meals} yemek (${r.kcal.toInt()} kcal) Health Connect'e yazıldı" + if (r.removed > 0) "; ${r.removed} silinen kayıt kaldırıldı." else "."
                 }
                 .onFailure { e ->
@@ -83,9 +85,9 @@ private fun Screen() {
     LaunchedEffect(loggedIn) {
         val b = bridge ?: return@LaunchedEffect
         granted = b.hasPermissions()
-        if (loggedIn && granted == true) sync()
+        if (loggedIn && granted == true) { SyncWorker.apply(ctx); sync() }
     }
-    LaunchedEffect(granted) { if (granted == true && loggedIn && last == 0L) sync() }
+    LaunchedEffect(granted) { if (granted == true && loggedIn) { SyncWorker.apply(ctx); if (last == 0L) sync() } }
 
     Column(Modifier.fillMaxSize().safeDrawingPadding().verticalScroll(rememberScrollState()).padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text("Yazio Köprüsü", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
@@ -147,6 +149,14 @@ private fun Screen() {
             Text(if (last > 0) "Son eşitleme: " + SimpleDateFormat("d MMM HH:mm", Locale.forLanguageTag("tr")).format(Date(last)) else "Henüz eşitlenmedi",
                 style = MaterialTheme.typography.bodySmall)
             Text("Uygulama her açıldığında " + (if (days == 1) "bugün" else "son $days gün") + " otomatik eşitlenir.", style = MaterialTheme.typography.bodySmall)
+            Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+                Column(Modifier.weight(1f)) {
+                    Text("Arka planda 6 saatte bir eşitle")
+                    Text("İnternet varken; en fazla son 7 gün.", style = MaterialTheme.typography.bodySmall)
+                }
+                Switch(bg, { bg = it; SyncWorker.setEnabled(ctx, it) })
+            }
+            bgErr?.let { Text("Son arka plan eşitlemesi başarısız: $it", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
         }
 
         msg?.let { Text(it, color = MaterialTheme.colorScheme.primary) }
