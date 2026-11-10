@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/logo.svg" width="128" alt="Yazio Köprüsü logosu"></p>
+
 # Yazio Köprüsü
 
 Yazio'daki yemekleri (kalori, protein, karbonhidrat, yağ, öğün) ve günlük suyu **Health Connect'e yazan** küçük, kişisel bir Android uygulaması.

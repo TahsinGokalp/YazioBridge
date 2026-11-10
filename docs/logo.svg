@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>Yazio Köprüsü</title>
+  <desc>Yemek ve su kayıtlarını sağlığa bağlayan kemerli köprü.</desc>
+  <rect x="8" y="8" width="496" height="496" rx="112" fill="#2E7D32"/>
+  <rect x="8" y="8" width="496" height="496" rx="112" fill="none" stroke="#FFFFFF" stroke-opacity=".4" stroke-width="8"/>
+  <!-- Geniş kemer ve iki ayak, küçük boyutta da köprü siluetini korur. -->
+  <path d="M104 360V288C104 204 172 148 256 148S408 204 408 288V360"
+        fill="none" stroke="#FFFFFF" stroke-width="32" stroke-linecap="round"/>
+  <path d="M80 288H432" fill="none" stroke="#FFFFFF" stroke-width="32" stroke-linecap="round"/>
+  <path d="M184 168V272M256 152V272M328 168V272"
+        fill="none" stroke="#FFFFFF" stroke-width="20" stroke-linecap="round"/>
+  <!-- Sol kıyıda su damlası, sağ kıyıda sade bir sağlık artısı. -->
+  <path d="M176 328C166 343 148 361 148 376A28 28 0 0 0 204 376C204 361 186 343 176 328Z"
+        fill="#FFFFFF"/>
+  <path d="M336 344V392M312 368H360"
+        fill="none" stroke="#FFFFFF" stroke-width="24" stroke-linecap="round"/>
+</svg>
